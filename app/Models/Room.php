@@ -10,6 +10,7 @@ class Room extends Model
     use HasFactory;
     public $timestamps = false;
     protected $fillable = [
+        'name',
         'capacity',
         'available_rooms',
     ];

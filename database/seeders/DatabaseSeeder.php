@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             DoctorSeeder::class,
             EmployeeSeeder::class,
             ProxiesAndPatientsSeeder::class,
+            RoomSeeder::class,
+            MealSeeder::class,
         ]);        
     }
 }

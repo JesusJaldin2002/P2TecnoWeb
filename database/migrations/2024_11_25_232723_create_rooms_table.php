@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id(); // Clave primaria
+            $table->string('name');
             $table->integer('capacity')->check('capacity > 0'); // Capacidad debe ser mayor a 0
             $table->integer('available_rooms')->check('available_rooms >= 0'); // Habitaciones disponibles no pueden ser negativas
         });

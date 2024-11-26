@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\MealController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProxyController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -41,7 +43,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/proxies/{proxy}/edit',[ProxyController::class,'edit'])->name('proxies.edit');
     Route::put('/proxies/{proxy}',[ProxyController::class,'update'])->name('proxies.update');
     Route::delete('/proxies/{proxy}',[ProxyController::class,'destroy'])->name('proxies.destroy');
-    Route::get('/proxies/{proxy}/show',[ProxyController::class,'show'])->name('proxies.show');
 
     // Patients
     Route::get('/patients',[PatientController::class,'index'])->name('patients.index');
@@ -50,6 +51,22 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/patients/{patient}/edit',[PatientController::class,'edit'])->name('patients.edit');
     Route::put('/patients/{patient}',[PatientController::class,'update'])->name('patients.update');
     Route::delete('/patients/{patient}',[PatientController::class,'destroy'])->name('patients.destroy');
-    Route::get('/patients/{patient}/show',[PatientController::class,'show'])->name('patients.show');
+
+    // Meals
+    Route::get('/meals',[MealController::class,'index'])->name('meals.index');
+    Route::get('/meals/create',[MealController::class,'create'])->name('meals.create');
+    Route::post('/meals',[MealController::class,'store'])->name('meals.store');
+    Route::get('/meals/{meal}/edit',[MealController::class,'edit'])->name('meals.edit');
+    Route::put('/meals/{meal}',[MealController::class,'update'])->name('meals.update');
+    Route::delete('/meals/{meal}',[MealController::class,'destroy'])->name('meals.destroy');    
+
+    // Rooms
+    Route::get('/rooms',[RoomController::class,'index'])->name('rooms.index');
+    Route::get('/rooms/create',[RoomController::class,'create'])->name('rooms.create');
+    Route::post('/rooms',[RoomController::class,'store'])->name('rooms.store');
+    Route::get('/rooms/{room}/edit',[RoomController::class,'edit'])->name('rooms.edit');
+    Route::put('/rooms/{room}',[RoomController::class,'update'])->name('rooms.update');
+    Route::delete('/rooms/{room}',[RoomController::class,'destroy'])->name('rooms.destroy');
+    
     
 });

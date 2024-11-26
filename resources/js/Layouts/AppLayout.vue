@@ -13,7 +13,8 @@ defineProps({
 });
 
 const showingNavigationDropdown = ref(false);
-const showingResponsiveDropdown = ref(false); // Estado para el dropdown responsivo
+const showingResponsiveDropdownUsuarios = ref(false);
+const showingResponsiveDropdownRecursos = ref(false);
 
 const logout = () => {
     router.post(route("logout"));
@@ -54,18 +55,8 @@ const logout = () => {
                                     Dashboard
                                 </NavLink>
                             </div>
-                            <!-- <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
-                            >
-                                <NavLink
-                                    :href="route('users.index')"
-                                    :active="route().current('users.index')"
-                                >
-                                    Users
-                                </NavLink>
-                            </div> -->
 
-                            <!-- Nuevo Dropdown -->
+                            <!-- Dropdown: Registro de Usuarios -->
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
@@ -132,6 +123,51 @@ const logout = () => {
                                             "
                                         >
                                             Apoderados
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
+                            </div>
+
+                            <!-- Dropdown: Recursos -->
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-2 sm:flex"
+                            >
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none"
+                                        >
+                                            Recursos
+                                            <svg
+                                                class="ms-2 -me-0.5 h-5 w-5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('rooms.index')"
+                                            :active="route().current('rooms.index')"
+                                        >
+                                            Salas
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('meals.index')"
+                                            :active="route().current('meals.index')"
+                                        >
+                                            Productos
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -227,10 +263,7 @@ const logout = () => {
                         <div class="-me-2 flex items-center sm:hidden">
                             <button
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                                @click="
-                                    showingNavigationDropdown =
-                                        !showingNavigationDropdown
-                                "
+                                @click="showingNavigationDropdown = !showingNavigationDropdown"
                             >
                                 <svg
                                     class="size-6"
@@ -281,22 +314,13 @@ const logout = () => {
                         >
                             Dashboard
                         </ResponsiveNavLink>
-                        <!-- <ResponsiveNavLink
-                            :href="route('users.index')"
-                            :active="route().current('users.index')"
-                        >
-                            Users
-                        </ResponsiveNavLink> -->
                     </div>
 
-                    <!-- Responsive Dropdown -->
+                    <!-- Responsive Dropdown: Registro de Usuarios -->
                     <div class="pt-2 pb-3 space-y-1">
                         <button
                             class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
-                            @click="
-                                showingResponsiveDropdown =
-                                    !showingResponsiveDropdown
-                            "
+                            @click="showingResponsiveDropdownUsuarios = !showingResponsiveDropdownUsuarios"
                         >
                             Registro de Usuarios
                             <svg
@@ -315,7 +339,7 @@ const logout = () => {
                             </svg>
                         </button>
                         <div
-                            v-if="showingResponsiveDropdown"
+                            v-if="showingResponsiveDropdownUsuarios"
                             class="mt-2 bg-gray-50 border border-gray-200 rounded-md shadow-md"
                         >
                             <div class="py-1">
@@ -343,6 +367,49 @@ const logout = () => {
                                     :active="route().current('proxies.index')"
                                 >
                                     Apoderados
+                                </ResponsiveNavLink>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Responsive Dropdown: Recursos -->
+                    <div class="pt-2 pb-3 space-y-1">
+                        <button
+                            class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
+                            @click="showingResponsiveDropdownRecursos = !showingResponsiveDropdownRecursos"
+                        >
+                            Recursos
+                            <svg
+                                class="h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                />
+                            </svg>
+                        </button>
+                        <div
+                            v-if="showingResponsiveDropdownRecursos"
+                            class="mt-2 bg-gray-50 border border-gray-200 rounded-md shadow-md"
+                        >
+                            <div class="py-1">
+                                <ResponsiveNavLink
+                                    :href="route('rooms.index')"
+                                    :active="route().current('rooms.index')"
+                                >
+                                    Salas
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    :href="route('meals.index')"
+                                    :active="route().current('meals.index')"
+                                >
+                                    Productos
                                 </ResponsiveNavLink>
                             </div>
                         </div>

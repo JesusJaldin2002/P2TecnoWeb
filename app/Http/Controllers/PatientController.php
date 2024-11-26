@@ -113,17 +113,7 @@ class PatientController extends Controller
         return redirect()->route('patients.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Patient $patient)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Patient $patient)
     {
         $patient->load(['person', 'proxy.person']);
