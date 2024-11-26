@@ -19,10 +19,10 @@ class EmployeeController extends Controller
 
         if ($search) {
             $query->whereHas('user', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('id', 'like', "%{$search}%");
-            })->orWhere('occupation', 'like', "%{$search}%");
+                $q->where('name', 'ilike', "%{$search}%")
+                    ->orWhere('email', 'ilike', "%{$search}%")
+                    ->orWhere('id', 'ilike', "%{$search}%");
+            })->orWhere('occupation', 'ilike', "%{$search}%");
         }
 
         $employees = $query->orderBy('id')->paginate(10);
@@ -51,7 +51,7 @@ class EmployeeController extends Controller
         // Validar los datos
         $request->validate(
             [
-                'name' => 'required',
+                'name' => 'required|min:8',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|min:8',
                 'ci' => 'required|digits_between:7,15|unique:users,ci',
@@ -61,6 +61,7 @@ class EmployeeController extends Controller
             ],
             [
                 'name.required' => 'El nombre es requerido',
+                'name.min' => 'El nombre debe contener 8 caracteres',
                 'email.required' => 'El email es requerido',
                 'email.email' => 'El email no tiene un formato válido',
                 'email.unique' => 'El email ya está en uso',
@@ -134,7 +135,7 @@ class EmployeeController extends Controller
         // Validar los datos
         $request->validate(
             [
-                'new_name' => 'required|string|max:255',
+                'new_name' => 'required|string|max:255|min:8',
                 'email' => 'required|email|unique:users,email,' . $employee->user->id,
                 'ci' => 'required|integer|min:1|max:2147483647|unique:users,ci,' . $employee->user->id,
                 'phone_number' => 'required|numeric|digits_between:7,15',
@@ -144,6 +145,7 @@ class EmployeeController extends Controller
             ],
             [
                 'new_name.required' => 'El nombre es obligatorio.',
+                'new_name.min' => 'El nombre debe tener al menos 8 caracteres.',
                 'new_name.string' => 'El nombre debe ser un texto válido.',
                 'new_name.max' => 'El nombre no puede superar los 255 caracteres.',
                 'email.required' => 'El email es obligatorio.',

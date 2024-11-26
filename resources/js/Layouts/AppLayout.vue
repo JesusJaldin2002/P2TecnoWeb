@@ -96,11 +96,19 @@ const logout = () => {
                                     <template #content>
                                         <DropdownLink
                                             :href="route('doctors.index')"
+                                            :active="
+                                                route().current('doctors.index')
+                                            "
                                         >
                                             Doctores
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('employees.index')"
+                                            :active="
+                                                route().current(
+                                                    'employees.index'
+                                                )
+                                            "
                                         >
                                             Empleados
                                         </DropdownLink>
@@ -109,11 +117,19 @@ const logout = () => {
                                         ></div>
                                         <DropdownLink
                                             :href="route('patients.index')"
+                                            :active="
+                                                route().current(
+                                                    'patients.index'
+                                                )
+                                            "
                                         >
                                             Pacientes
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('proxies.index')"
+                                            :active="
+                                                route().current('proxies.index')
+                                            "
                                         >
                                             Apoderados
                                         </DropdownLink>
@@ -305,22 +321,26 @@ const logout = () => {
                             <div class="py-1">
                                 <ResponsiveNavLink
                                     :href="route('doctors.index')"
+                                    :active="route().current('doctors.index')"
                                 >
                                     Doctores
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
                                     :href="route('employees.index')"
+                                    :active="route().current('employees.index')"
                                 >
                                     Empleados
                                 </ResponsiveNavLink>
                                 <div class="border-t border-gray-200"></div>
                                 <ResponsiveNavLink
                                     :href="route('patients.index')"
+                                    :active="route().current('patients.index')"
                                 >
                                     Pacientes
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
                                     :href="route('proxies.index')"
+                                    :active="route().current('proxies.index')"
                                 >
                                     Apoderados
                                 </ResponsiveNavLink>
