@@ -17,6 +17,7 @@ const showingResponsiveDropdownUsuarios = ref(false);
 const showingResponsiveDropdownRecursos = ref(false);
 const showingResponsiveDropdownServicios = ref(false);
 const showingResponsiveDropdownAtencion = ref(false);
+const showingResponsiveDropdownFinanciera = ref(false);
 
 const logout = () => {
     router.post(route("logout"));
@@ -264,6 +265,56 @@ const logout = () => {
                                             :active="route().current('observations.index')"
                                         >
                                             Seguimientos
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
+                            </div>
+                            <!-- Dropdown: Financiera -->
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-2 sm:flex"
+                            >
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none"
+                                        >
+                                            Adm. Financiera
+                                            <svg
+                                                class="ms-2 -me-0.5 h-5 w-5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('payments.index')"
+                                            :active="route().current('payments.index')"
+                                        >
+                                            Pagos
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('reports.index')"
+                                            :active="route().current('reports.index')"
+                                        >
+                                            Reportes
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('stadistics.index')"
+                                            :active="route().current('stadistics.index')"
+                                        >
+                                            Estadísticas
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -596,6 +647,54 @@ const logout = () => {
                                     :active="route().current('observations.index')"
                                 >
                                     Seguimientos
+                                </ResponsiveNavLink>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Responsive Dropdown: Financiera -->
+                    <div class="pt-2 pb-3 space-y-1">
+                        <button
+                            class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
+                            @click="showingResponsiveDropdownFinanciera = !showingResponsiveDropdownFinanciera"
+                        >
+                            Adm. Financiera
+                            <svg
+                                class="h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                />
+                            </svg>
+                        </button>
+                        <div
+                            v-if="showingResponsiveDropdownFinanciera"
+                            class="mt-2 bg-gray-50 border border-gray-200 rounded-md shadow-md"
+                        >
+                            <div class="py-1">
+                                <ResponsiveNavLink
+                                    :href="route('payments.index')"
+                                    :active="route().current('payments.index')"
+                                >
+                                    Pagos
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    :href="route('reports.index')"
+                                    :active="route().current('reports.index')"
+                                >
+                                    Reportes
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    :href="route('stadistics.index')"
+                                    :active="route().current('stadistics.index')"
+                                >
+                                    Estadísticas
                                 </ResponsiveNavLink>
                             </div>
                         </div>

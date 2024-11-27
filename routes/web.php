@@ -9,6 +9,7 @@ use App\Http\Controllers\ObservationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProxyController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\VaccineController;
@@ -118,10 +119,23 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     // Payments
     Route::get('/payments/pay', [PaymentController::class, 'pay'])->name('payments.pay');
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
     Route::post('/payments/generate-qr', [PaymentController::class, 'generateQR'])->name('payments.generateQR');
     Route::post('/payments/verify', [PaymentController::class, 'verifyPayment'])->name('payments.verify');
     Route::post('/payments/callback', [PaymentController::class, 'callback'])->name('payments.callback');
     Route::get('/payments/return', [PaymentController::class, 'return'])->name('payments.return');
     Route::get('/test-token', [PaymentController::class, 'testToken']);
+
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/payments', [ReportController::class, 'payment'])->name('reports.payment');
+    Route::get('/reports/consults', [ReportController::class, 'consult'])->name('reports.consult');
+    Route::get('/reports/treatments', [ReportController::class, 'treatment'])->name('reports.treatment');
+
+
+    // Stadistics
+    Route::get('/stadistics', [ReportController::class, 'stadistics'])->name('stadistics.index');
 
 });

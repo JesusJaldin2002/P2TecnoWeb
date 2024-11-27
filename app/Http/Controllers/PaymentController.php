@@ -7,9 +7,88 @@ use App\Models\Service;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class PaymentController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+
+        $query = Payment::with([
+            'service.patient.person', // Relación para obtener el nombre del paciente
+        ]);
+
+        if ($search) {
+            $query->whereHas('service.patient.person', function ($q) use ($search) {
+                $q->where('name', 'ilike', "%{$search}%");
+            })
+                ->orWhere('total', 'like', "%{$search}%")
+                ->orWhere('tigo_transaction_id', 'ilike', "%{$search}%")
+                ->orWhere('payment_type', 'ilike', "%{$search}%");
+        }
+
+        $payments = $query->orderBy('date', 'desc')->paginate(10);
+
+        return Inertia::render('Payments/Index', [
+            'payments' => $payments,
+            'search' => $search,
+            'success' => session('success'),
+        ]);
+    }
+
+    public function create()
+    {
+        // Obtener servicios sin pago asociado
+        $services = Service::doesntHave('payment')
+            ->with('patient.person')
+            ->get();
+
+        return Inertia::render('Payments/Create', [
+            'services' => $services,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate(
+            [
+                'service_id' => 'required|exists:services,id|unique:payments,service_id',
+                'date' => 'required|date',
+                'payment_type' => 'required|string',
+                'total' => 'required|numeric|min:0',
+            ],
+            [
+                'service_id.required' => 'Debe seleccionar un servicio.',
+                'service_id.exists' => 'El servicio seleccionado no es válido.',
+                'service_id.unique' => 'Este servicio ya tiene un pago registrado.',
+                'date.required' => 'La fecha es obligatoria.',
+                'payment_type.required' => 'El tipo de pago es obligatorio.',
+                'total.required' => 'El total es obligatorio.',
+                'total.numeric' => 'El total debe ser un número.',
+                'total.min' => 'El total no puede ser negativo.',
+            ]
+        );
+
+        Payment::create([
+            'service_id' => $request->service_id,
+            'date' => $request->date,
+            'payment_time' => now()->format('H:i:s'), // Hora actual
+            'payment_type' => $request->payment_type,
+            'total' => $request->total,
+            'tigo_transaction_id' => $request->tigo_transaction_id,
+        ]);
+
+        session()->flash('success', 'Pago registrado correctamente.');
+
+        return redirect()->route('payments.index');
+    }
+
+
+
+
+
     public function pay(Request $request)
     {
         // Validar los datos recibidos
@@ -54,7 +133,7 @@ class PaymentController extends Controller
 
             $datosPago = [
                 "tcCommerceID" => 'd029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c',
-                "tcNroPago" => "INF513-SA-grupo04-" . $validated['service_id']."-". - rand(100000, 999999),
+                "tcNroPago" => "INF513-SA-grupo04-" . $validated['service_id'] . "-" . -rand(100000, 999999),
                 "tcNombreUsuario" => $validated['tcNombreUsuario'],
                 "tnCiNit" => $validated['tnCiNit'],
                 "tnTelefono" => $validated['tnTelefono'],

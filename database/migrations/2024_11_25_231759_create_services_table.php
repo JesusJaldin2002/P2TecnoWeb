@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('employee_id'); // Relación con employees (NO NULLABLE)
             $table->char('service_type', 1); // Tipo de servicio ('C', 'T', 'V')
             $table->float('price')->check('price >= 0'); // Precio, con validación
-
+            $table->timestamps(); // Campos de control
             // Relaciones
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('restrict');

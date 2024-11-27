@@ -12,7 +12,7 @@ class Payment extends Model
         'service_id',
         'date',
         'tigo_transaction_id',
-        'tigo_transaction_id',
+        'payment_time',
         'total',
         'payment_type',
     ];
