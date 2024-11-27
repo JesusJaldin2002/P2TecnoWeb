@@ -8,7 +8,7 @@ const form = reactive({
     patient_id: null, // Usar null para evitar que coincida con el valor de cualquier opción
     room_id: null,
     origin: "",
-    status: "Pendiente",
+    status: "Activo",
     meals: [],
 });
 

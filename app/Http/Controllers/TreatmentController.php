@@ -23,7 +23,7 @@ class TreatmentController extends Controller
             'service.patient.person',
             'service.employee.user',
             'room',
-            'meals', // Incluimos las comidas asociadas
+            'meals',
         ]);
 
         if ($search) {

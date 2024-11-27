@@ -105,6 +105,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/caresheets/{caresheet}/edit', [CaresheetController::class, 'edit'])->name('caresheets.edit');
     Route::put('/caresheets/{caresheet}', [CaresheetController::class, 'update'])->name('caresheets.update');
     Route::delete('/caresheets/{caresheet}', [CaresheetController::class, 'destroy'])->name('caresheets.destroy');
+    Route::get('/caresheets/{caresheet}',[CaresheetController::class, 'show'])->name('caresheets.show');
 
     // Observations
     Route::get('/observations', [ObservationController::class, 'index'])->name('observations.index');
@@ -113,6 +114,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/observations/{observation}/edit', [ObservationController::class, 'edit'])->name('observations.edit');
     Route::put('/observations/{observation}', [ObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [ObservationController::class, 'destroy'])->name('observations.destroy');
+    Route::get('/observations/{treatment}',[ObservationController::class, 'show'])->name('observations.show');
 
     // Payments
     Route::get('/payments/pay', [PaymentController::class, 'pay'])->name('payments.pay');
