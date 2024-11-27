@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('consults', function (Blueprint $table) {
             $table->unsignedBigInteger('id'); // Clave primaria heredada de services
+            $table->unsignedBigInteger('doctor_id'); // Relación con doctors
             $table->date('date'); // Fecha de la consulta
             $table->string('reason', 255)->nullable(); 
 
             $table->primary('id');
             $table->foreign('id')->references('id')->on('services')->onDelete('cascade');
+            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('set null');
+
         });
     }
 

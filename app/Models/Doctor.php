@@ -25,8 +25,8 @@ class Doctor extends Model
         return $this->hasMany(Observation::class);
     }
 
-    public function caresheets()
+    public function consults()
     {
-        return $this->hasMany(Caresheet::class);
+        return $this->hasMany(Consult::class);
     }
 }

@@ -11,7 +11,10 @@ class Payment extends Model
     protected $fillable = [
         'service_id',
         'date',
+        'tigo_transaction_id',
+        'tigo_transaction_id',
         'total',
+        'payment_type',
     ];
 
     /**

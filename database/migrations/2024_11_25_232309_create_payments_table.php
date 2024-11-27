@@ -16,7 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('service_id')->unique();
             $table->date('date'); // Fecha del pago
             $table->float('total')->check('total >= 0');
-
+            $table->string('tigo_transaction_id')->nullable(); // ID de transacción Tigo
+            $table->string('payment_time')->nullable();
+            $table->string('payment_type')->nullable();
             // Relación con services
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
         });

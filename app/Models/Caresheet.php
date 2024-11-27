@@ -28,8 +28,5 @@ class Caresheet extends Model
     /**
      * Relación con el modelo Doctor.
      */
-    public function doctor()
-    {
-        return $this->belongsTo(Doctor::class);
-    }
+
 }

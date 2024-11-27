@@ -15,6 +15,8 @@ defineProps({
 const showingNavigationDropdown = ref(false);
 const showingResponsiveDropdownUsuarios = ref(false);
 const showingResponsiveDropdownRecursos = ref(false);
+const showingResponsiveDropdownServicios = ref(false);
+const showingResponsiveDropdownAtencion = ref(false);
 
 const logout = () => {
     router.post(route("logout"));
@@ -66,7 +68,7 @@ const logout = () => {
                                             type="button"
                                             class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none"
                                         >
-                                            Registro de Usuarios
+                                            Registro
                                             <svg
                                                 class="ms-2 -me-0.5 h-5 w-5"
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -168,6 +170,100 @@ const logout = () => {
                                             :active="route().current('meals.index')"
                                         >
                                             Productos
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
+                            </div>
+                            <!-- Dropdown: Servicios -->
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-2 sm:flex"
+                            >
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none"
+                                        >
+                                            Servicios
+                                            <svg
+                                                class="ms-2 -me-0.5 h-5 w-5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('treatments.index')"
+                                            :active="route().current('treatments.index')"
+                                        >
+                                            Tratamientos
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('consults.index')"
+                                            :active="route().current('consults.index')"
+                                        >
+                                            Consultas
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('vaccines.index')"
+                                            :active="route().current('vaccines.index')"
+                                        >
+                                            Vacunas
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
+                            </div>
+                            <!-- Dropdown: Atencion -->
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-2 sm:flex"
+                            >
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none"
+                                        >
+                                            Atención
+                                            <svg
+                                                class="ms-2 -me-0.5 h-5 w-5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('caresheets.index')"
+                                            :active="route().current('caresheets.index')"
+                                        >
+                                            Hojas de Atención
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('observations.index')"
+                                            :active="route().current('observations.index')"
+                                        >
+                                            Seguimientos
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -322,7 +418,7 @@ const logout = () => {
                             class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
                             @click="showingResponsiveDropdownUsuarios = !showingResponsiveDropdownUsuarios"
                         >
-                            Registro de Usuarios
+                            Registro
                             <svg
                                 class="h-5 w-5"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -410,6 +506,96 @@ const logout = () => {
                                     :active="route().current('meals.index')"
                                 >
                                     Productos
+                                </ResponsiveNavLink>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Responsive Dropdown: Servicios -->
+                    <div class="pt-2 pb-3 space-y-1">
+                        <button
+                            class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
+                            @click="showingResponsiveDropdownServicios = !showingResponsiveDropdownServicios"
+                        >
+                            Servicios
+                            <svg
+                                class="h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                />
+                            </svg>
+                        </button>
+                        <div
+                            v-if="showingResponsiveDropdownServicios"
+                            class="mt-2 bg-gray-50 border border-gray-200 rounded-md shadow-md"
+                        >
+                            <div class="py-1">
+                                <ResponsiveNavLink
+                                    :href="route('treatments.index')"
+                                    :active="route().current('treatments.index')"
+                                >
+                                    Tratamientos
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    :href="route('consults.index')"
+                                    :active="route().current('consults.index')"
+                                >
+                                    Consultas
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    :href="route('vaccines.index')"
+                                    :active="route().current('vaccines.index')"
+                                >
+                                    Vacunas
+                                </ResponsiveNavLink>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Responsive Dropdown: Atencion -->
+                    <div class="pt-2 pb-3 space-y-1">
+                        <button
+                            class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
+                            @click="showingResponsiveDropdownAtencion = !showingResponsiveDropdownAtencion"
+                        >
+                            Atención
+                            <svg
+                                class="h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                />
+                            </svg>
+                        </button>
+                        <div
+                            v-if="showingResponsiveDropdownAtencion"
+                            class="mt-2 bg-gray-50 border border-gray-200 rounded-md shadow-md"
+                        >
+                            <div class="py-1">
+                                <ResponsiveNavLink
+                                    :href="route('caresheets.index')"
+                                    :active="route().current('caresheets.index')"
+                                >
+                                    Hojas de Atención
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    :href="route('observations.index')"
+                                    :active="route().current('observations.index')"
+                                >
+                                    Seguimientos
                                 </ResponsiveNavLink>
                             </div>
                         </div>

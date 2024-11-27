@@ -11,6 +11,7 @@ class Consult extends Model
     public $timestamps = false;
     protected $fillable = [
         'id',
+        'doctor_id',
         'date',
         'reason',
     ];
@@ -29,5 +30,10 @@ class Consult extends Model
     public function caresheet()
     {
         return $this->hasOne(Caresheet::class, 'consult_id', 'id');
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
     }
 }

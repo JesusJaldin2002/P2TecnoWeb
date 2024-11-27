@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('observations', function (Blueprint $table) {
             $table->id(); // Clave primaria
             $table->unsignedBigInteger('treatment_id'); // Relación con treatments
-            $table->unsignedBigInteger('doctor_id')->nullable(); // Relación con doctors
+            $table->unsignedBigInteger('doctor_id'); // Relación con doctors
             $table->date('date'); // Fecha de la observación
             $table->float('weight')->nullable()->check('weight >= 0'); // Peso no negativo
             $table->float('height')->nullable()->check('height >= 0'); // Altura no negativa
