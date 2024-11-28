@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/login', function () {
-    return Inertia::render('Auth/Login');
-})->name('login');
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 Route::post('/register-visit', [PageVisitController::class, 'registerVisit']);
 
