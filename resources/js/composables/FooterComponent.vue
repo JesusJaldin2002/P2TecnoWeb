@@ -16,7 +16,7 @@ const registerVisit = async () => {
     ).content;
 
     try {
-        const response = await fetch("/register-visit", {
+        const response = await fetch(`${basePath}/register-visit`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
