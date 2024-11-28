@@ -116,7 +116,7 @@ onMounted(() => {
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
                                     <img
-                                        src="/images/medical.png"
+                                        src="https://www.tecnoweb.org.bo/inf513/grupo04sa/proyecto3/P2TecnoWeb/public/images/medical.png"
                                         alt="Logo"
                                         class="block h-12 w-auto"
                                     />
