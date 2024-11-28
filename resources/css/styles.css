@@ -14,6 +14,8 @@
     --shadow: 0 1px 6px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
     --radius: 0.375rem;
     --font-size: 16px;
+    --footer-size: 18px;
+    --footer-color: #2563eb;
     --font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
@@ -33,6 +35,8 @@
     --shadow: 0 1px 6px rgba(0, 0, 0, 0.3); /* Sombra más fuerte */
     --radius: 0.375rem;
     --font-size: 16px;
+    --footer-size: 18px;
+    --footer-color: #f472b6;
     --font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
@@ -51,6 +55,8 @@
     --border-color: #94a3b8; /* Bordes grises */
     --shadow: 0 1px 6px rgba(0, 0, 0, 0.2); /* Sombra moderada */
     --radius: 0.375rem;
+    --footer-size: 18px;
+    --footer-color: #10b981;
     --font-size: 18px;
     --font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
@@ -70,6 +76,8 @@
     --border-color: #d1d5db; /* Bordes grises claros */
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra fuerte */
     --radius: 0.375rem;
+    --footer-size: 18px;
+    --footer-color: #111827;
     --font-size: 20px;
     --font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
@@ -85,7 +93,9 @@
     --warning-color: #a16207; /* Amarillo oscuro */
     --back-color: #4b5563; /* Gris aún más oscuro */
     --background-color: #0f172a; /* Fondo azul oscuro */
-    --text-color: #f1f5f9; /* Texto claro */
+    --text-color: #f1f5f9;
+    --footer-size: 18px;
+    --footer-color: #f1f5f9; /* Texto claro */
     --border-color: #334155; /* Bordes oscuros */
 }
 
@@ -99,7 +109,9 @@
     --warning-color: #854d0e; /* Amarillo oscuro */
     --title-color: #9d174d;
     --back-color: #581c87; /* Morado oscuro */
-    --background-color: #2c0513; /* Fondo oscuro */
+    --background-color: #2c0513;
+    --footer-size: 18px;
+    --footer-color: #f1f5f9; /* Fondo oscuro */
     --text-color: #f8fafc; /* Texto blanco */
     --border-color: #9f7aea; /* Bordes púrpuras oscuros */
 }
@@ -116,6 +128,8 @@
     --back-color: #1e3a8a; /* Azul profundo */
     --background-color: #0c1e1b; /* Fondo verde oscuro */
     --text-color: #f1f5f9; /* Texto claro */
+    --footer-size: 18px;
+    --footer-color: #f1f5f9;
     --border-color: #1e293b; /* Bordes oscuros */
 }
 
@@ -131,6 +145,8 @@
     --title-color: #854d0e;
     --background-color: #1a202c; /* Fondo gris oscuro */
     --text-color: #f8fafc; /* Texto claro */
+    --footer-size: 18px;
+    --footer-color: #f1f5f9;
     --border-color: #2d3748; /* Bordes grises oscuros */
 }
 
@@ -375,7 +391,7 @@ h1, h2, h3, h4, h5, h6, p, a, span, td, th, label, button {
     background-color: var(--background-color);
     cursor: pointer;
     font-size: var(--font-size);
-    color: var(--text-color);
+    color: #000;
     font-family: var(--font-family);
 }
 

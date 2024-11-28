@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Consult;
 use App\Models\Doctor;
+use App\Models\Page;
 use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\Treatment;
@@ -186,6 +187,43 @@ class ReportController extends Controller
         return Inertia::render('Reports/Treatments', [
             'patients' => $patients,
             'treatments' => $treatments,
+        ]);
+    }
+
+    public function stadistics()
+    {
+        // Páginas con más de 0 visitas
+        $pages = Page::where('visitas', '>', 0)
+            ->orderByDesc('visitas')
+            ->get();
+
+        // Pagos por paciente, obteniendo el nombre del paciente desde la tabla `person`
+        $payments = Payment::selectRaw('people.name as patient_name, sum(payments.total) as total')
+            ->join('services', 'payments.service_id', '=', 'services.id')
+            ->join('patients', 'services.patient_id', '=', 'patients.id')
+            ->join('people', 'patients.id', '=', 'people.id')  // Ajuste aquí
+            ->groupBy('people.id', 'people.name')
+            ->havingRaw('sum(payments.total) > 0')
+            ->get();
+
+        // Consultas por doctor
+        $consults = Consult::selectRaw('users.name as doctor_name, count(*) as total')
+            ->join('doctors', 'consults.doctor_id', '=', 'doctors.id')  // Relaciona las consultas con los doctores
+            ->join('users', 'doctors.id', '=', 'users.id')  // Relaciona los doctores con los usuarios
+            ->groupBy('users.id', 'users.name')  // Agrupa por el id y el nombre del doctor
+            ->havingRaw('count(*) > 0')  // Solo muestra los doctores que tienen consultas
+            ->get();
+
+        // Pasar los datos a la vista
+        return Inertia::render('Reports/Stadistics', [
+            'pages' => $pages->map(function ($page) {
+                return [
+                    'nombre' => $page->nombre,
+                    'visitas' => $page->visitas,
+                ];
+            }),
+            'payments' => $payments,
+            'consults' => $consults
         ]);
     }
 }

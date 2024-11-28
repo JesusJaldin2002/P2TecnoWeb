@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ProxiesAndPatientsSeeder::class,
             RoomSeeder::class,
             MealSeeder::class,
+            PageSeeder::class,
         ]);        
     }
 }

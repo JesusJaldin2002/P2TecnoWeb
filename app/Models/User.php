@@ -34,7 +34,7 @@ class User extends Authenticatable
         'role_id',
     ];
 
-    protected $with = ['role']; 
+    protected $with = ['role'];
 
     # Relaciones
 
@@ -51,6 +51,11 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class); // Relación inversa: un usuario pertenece a un rol
+    }
+
+    public function pages()
+    {
+        return $this->belongsToMany(Page::class)->withPivot('visitas');
     }
 
     /**

@@ -8,6 +8,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { usePage } from "@inertiajs/vue3";
+import FooterComponent from '@/composables/FooterComponent.vue';
 
 defineProps({
     title: String,
@@ -15,7 +16,8 @@ defineProps({
 
 const page = usePage();
 const userRole = computed(() => page.props.auth.user.role.name);
-console.log("Usuario autenticado:", page.props.auth.user.role.name);
+console.log(page.props.auth.user.id);
+console.log("Usuario autenticado:", page.props.auth.user.name);
 
 const isGerente = computed(() => userRole.value === "Gerente");
 const isEmpleado = computed(() => userRole.value === "Empleado");
@@ -1014,6 +1016,8 @@ onMounted(() => {
             <main>
                 <slot />
             </main>
+
+            <FooterComponent />
         </div>
     </div>
 </template>
