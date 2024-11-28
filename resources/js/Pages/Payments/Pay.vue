@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { ref } from "vue";
+import Swal from "sweetalert2";
 import { Link, router } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -93,15 +94,34 @@ const verifyPayment = async () => {
             }),
         });
 
-        if (!response.ok) {
-            throw new Error("Error en la solicitud: " + response.statusText);
-        }
-
         const data = await response.json();
-        alert(data.message || "Pago verificado correctamente.");
+
+        if (data.success) {
+            Swal.fire({
+                title: "¡Éxito!",
+                text: data.message,
+                icon: "success",
+                confirmButtonText: "Ir a Pagos",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    router.visit(route("payments.index"));
+                }
+            });
+        } else {
+            Swal.fire({
+                title: "Error",
+                text: data.message,
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+        }
     } catch (error) {
-        errorMessage.value =
-            "Error al verificar el pago. Por favor, inténtelo nuevamente.";
+        Swal.fire({
+            title: "Error Interno",
+            text: "Hubo un error al verificar el pago. Inténtelo de nuevo más tarde.",
+            icon: "error",
+            confirmButtonText: "OK",
+        });
         console.error("Error en verifyPayment:", error);
     } finally {
         loadingVerify.value = false;

@@ -23,6 +23,14 @@ onMounted(() => {
             confirmButtonText: "OK",
         });
     }
+    if (props.error) {
+        Swal.fire({
+            title: "Error",
+            text: props.error,
+            icon: "error",
+            confirmButtonText: "OK",
+        });
+    }
 });
 
 // Función para búsqueda
@@ -85,7 +93,7 @@ watch(search, (newSearch) => {
                                     : 'Desconocido'
                             }}
                         </td>
-                        <td>{{ new Date(payment.date).toLocaleDateString() }} - {{ payment.payment_time }}</td>
+                        <td>{{ payment.date }} - {{ payment.payment_time }}</td>
                         <td><strong>Bs </strong>{{ payment.total }}</td>
                         <td>{{ payment.payment_type || 'No especificado' }}</td>
                         <td>{{ payment.tigo_transaction_id || 'No especificado' }}</td>

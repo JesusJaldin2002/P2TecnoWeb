@@ -224,12 +224,12 @@ class PaymentController extends Controller
                     'payment_type' => 'QR',
                 ]);
 
-                return response()->json(['message' => 'Pago verificado y registrado correctamente.']);
+                return response()->json(['success' => true, 'message' => 'Pago verificado y registrado correctamente.']);
             }
 
-            return response()->json(['error' => 'El pago no ha sido completado.'], 400);
+            return response()->json(['success' => false, 'message' => 'El pago no ha sido completado.']);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['success' => false, 'message' => 'Error interno al verificar el pago.']);
         }
     }
 
