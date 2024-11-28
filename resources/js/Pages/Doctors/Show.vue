@@ -4,7 +4,7 @@ import { router } from "@inertiajs/vue3";
 
 // Props
 defineProps({
-    doctor: Object, // Objeto del doctor (incluye la relación con user)
+    doctor: Object,
 });
 
 const goBack = () => {

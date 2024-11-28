@@ -33,45 +33,74 @@ const currentTheme = ref("default");
 const logout = () => {
     router.post(route("logout"));
 };
-// Función para cambiar el tema
-const changeTheme = (theme) => {
-    // console.log(`Cambio de tema a: ${theme}`); // Verificamos si la función se está ejecutando
 
-    // Elimina las clases de tema anteriores
+const isDarkMode = computed(() =>
+    document.documentElement.classList.contains("theme-dark")
+);
+// Función para cambiar el tema (incluye la lógica manual/automática)
+const changeTheme = (theme, manualDarkMode = null) => {
+    const currentHour = new Date().getHours();
+    const isNightTime =
+        manualDarkMode === null
+            ? currentHour >= 19 || currentHour < 6 // Automático: basado en la hora
+            : manualDarkMode; // Manual: forzado por el usuario
+
     const htmlElement = document.documentElement;
+
+    // Elimina las clases de tema actuales
     htmlElement.classList.remove(
+        "theme-default",
         "theme-children",
         "theme-youth",
-        "theme-adults"
+        "theme-adults",
+        "theme-dark"
     );
 
     // Agregar la clase del nuevo tema
     if (theme !== "default") {
         htmlElement.classList.add(`theme-${theme}`);
-        // console.log(`Clase theme-${theme} agregada.`); // Verificamos si se agrega la clase
     }
 
-    // Guardamos el tema en localStorage
+    // Agregar el modo oscuro si corresponde
+    if (isNightTime) {
+        htmlElement.classList.add("theme-dark");
+    }
+
+    // Guardar las preferencias en localStorage
     localStorage.setItem("theme", theme);
-    // console.log(`Tema guardado en localStorage: ${theme}`); // Verificamos si el tema se guarda
+    if (manualDarkMode !== null) {
+        localStorage.setItem("manualDarkMode", manualDarkMode);
+    } else {
+        localStorage.removeItem("manualDarkMode"); // Restaurar a automático si no es manual
+    }
+
+    console.log(`Tema: ${theme}`);
+    console.log(`Modo oscuro: ${isNightTime ? "Activado" : "Desactivado"}`);
+    console.log(`Modo manual: ${manualDarkMode !== null ? "Sí" : "No"}`);
 };
 
-// Cargar el tema guardado desde localStorage al montar el componente
-onMounted(() => {
-    const savedTheme = localStorage.getItem("theme");
-    // console.log(`Tema recuperado desde localStorage: ${savedTheme}`); // Verificamos qué tema se recupera
+// Función para alternar modo día/noche manualmente
+const toggleManualDarkMode = () => {
+    const currentDarkMode =
+        document.documentElement.classList.contains("theme-dark");
+    const newManualDarkMode = !currentDarkMode; // Alternamos
+    const savedTheme = localStorage.getItem("theme") || "default";
 
-    if (savedTheme) {
-        changeTheme(savedTheme); // Aplicamos el tema guardado
-    } else {
-        changeTheme("default"); // Si no hay tema guardado, usamos el predeterminado
-    }
+    // Aplicamos el nuevo modo manual
+    changeTheme(savedTheme, newManualDarkMode);
+};
+
+// Al montar el componente, cargar el tema y el estado manual
+onMounted(() => {
+    const savedTheme = localStorage.getItem("theme") || "default";
+    const manualDarkMode = localStorage.getItem("manualDarkMode") === "true";
+    changeTheme(savedTheme, manualDarkMode ? manualDarkMode : null);
 });
 </script>
 
 <template>
     <div>
-        <Head :title="title" />
+        <Head class="title" :title="title" />
 
         <Banner />
 
@@ -420,7 +449,10 @@ onMounted(() => {
                             </div>
                         </div>
                         <!-- Theme Switcher in Dropdown -->
-                        <div class="hidden sm:flex sm:items-center sm:ms-6">
+                        <div
+                            class="hidden sm:flex sm:items-center sm:ms-6 gap-4"
+                        >
+                            <!-- Dropdown para cambiar tema -->
                             <div class="ms-3 relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -446,7 +478,7 @@ onMounted(() => {
                                     </template>
 
                                     <template #content>
-                                        <!-- Theme Switcher Buttons inside Dropdown -->
+                                        <!-- Botones para seleccionar temas -->
                                         <div>
                                             <DropdownLink
                                                 href="#"
@@ -476,6 +508,14 @@ onMounted(() => {
                                     </template>
                                 </Dropdown>
                             </div>
+
+                            <!-- Botón para alternar modo día/noche -->
+                            <button
+                                @click="toggleManualDarkMode"
+                                class="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700 transition ease-in-out duration-150"
+                            >
+                                Probar
+                            </button>
                         </div>
                         <!-- Settings Dropdown -->
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
