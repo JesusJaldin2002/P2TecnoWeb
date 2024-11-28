@@ -5,9 +5,12 @@ import { usePage } from "@inertiajs/vue3";
 const currentVisits = ref(0);
 const userVisits = ref(0);
 
+// Ruta base del proyecto
+const basePath = "https://www.tecnoweb.org.bo/inf513/grupo04sa/proyecto3/P2TecnoWeb/public";
+
 const registerVisit = async () => {
     const page = usePage();
-    const currentPath = window.location.pathname;
+    const currentPath = `${basePath}${window.location.pathname.replace(/^\/+/, "")}`;
     const csrfToken = document.head.querySelector(
         'meta[name="csrf-token"]'
     ).content;
