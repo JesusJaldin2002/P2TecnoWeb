@@ -31,7 +31,10 @@ class User extends Authenticatable
         'phone_number',
         'address',
         'user_type',
+        'role_id',
     ];
+
+    protected $with = ['role']; 
 
     # Relaciones
 
@@ -43,6 +46,11 @@ class User extends Authenticatable
     public function doctor()
     {
         return $this->hasOne(Doctor::class, 'id', 'id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class); // Relación inversa: un usuario pertenece a un rol
     }
 
     /**

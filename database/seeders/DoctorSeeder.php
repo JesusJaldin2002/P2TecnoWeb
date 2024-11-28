@@ -13,6 +13,18 @@ class DoctorSeeder extends Seeder
      */
     public function run(): void
     {
+
+        User::create([
+            'ci' => '73122328',
+            'name' => 'Jorge Rossel',
+            'email' => 'jorge@gmail.com',
+            'password' => bcrypt('12345678'), // Contraseña por defecto
+            'phone_number' => rand(100000000, 999999999), // Número de teléfono aleatorio
+            'address' => 'Calle ' . rand(1, 100) . ', Casa ' . rand(1, 100),
+            'user_type' => 'G', // Tipo de usuario 'D' para doctor
+            'role_id' => 1
+        ]);
+
         $doctors = [
             ['ci' => 12345678, 'name' => 'Dr. Jesús', 'email' => 'jesus@gmail.com', 'number_ss' => '12345-67890'],
             ['ci' => 23456789, 'name' => 'Dr. Ana', 'email' => 'ana@gmail.com', 'number_ss' => '23456-78901'],
@@ -38,6 +50,7 @@ class DoctorSeeder extends Seeder
                 'phone_number' => rand(100000000, 999999999), // Número de teléfono aleatorio
                 'address' => 'Calle ' . rand(1, 100) . ', Casa ' . rand(1, 100),
                 'user_type' => 'D', // Tipo de usuario 'D' para doctor
+                'role_id' => 3
             ]);
 
             // Asociar al modelo Doctor

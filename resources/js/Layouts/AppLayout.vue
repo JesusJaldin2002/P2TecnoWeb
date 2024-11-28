@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
@@ -7,10 +7,19 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import { usePage } from "@inertiajs/vue3";
 
 defineProps({
     title: String,
 });
+
+const page = usePage();
+const userRole = computed(() => page.props.auth.user.role.name);
+console.log("Usuario autenticado:", page.props.auth.user.role.name);
+
+const isGerente = computed(() => userRole.value === "Gerente");
+const isEmpleado = computed(() => userRole.value === "Empleado");
+const isDoctor = computed(() => userRole.value === "Doctor");
 
 const showingNavigationDropdown = ref(false);
 const showingResponsiveDropdownUsuarios = ref(false);
@@ -19,9 +28,45 @@ const showingResponsiveDropdownServicios = ref(false);
 const showingResponsiveDropdownAtencion = ref(false);
 const showingResponsiveDropdownFinanciera = ref(false);
 
+const currentTheme = ref("default");
+
 const logout = () => {
     router.post(route("logout"));
 };
+// Función para cambiar el tema
+const changeTheme = (theme) => {
+    // console.log(`Cambio de tema a: ${theme}`); // Verificamos si la función se está ejecutando
+
+    // Elimina las clases de tema anteriores
+    const htmlElement = document.documentElement;
+    htmlElement.classList.remove(
+        "theme-children",
+        "theme-youth",
+        "theme-adults"
+    );
+
+    // Agregar la clase del nuevo tema
+    if (theme !== "default") {
+        htmlElement.classList.add(`theme-${theme}`);
+        // console.log(`Clase theme-${theme} agregada.`); // Verificamos si se agrega la clase
+    }
+
+    // Guardamos el tema en localStorage
+    localStorage.setItem("theme", theme);
+    // console.log(`Tema guardado en localStorage: ${theme}`); // Verificamos si el tema se guarda
+};
+
+// Cargar el tema guardado desde localStorage al montar el componente
+onMounted(() => {
+    const savedTheme = localStorage.getItem("theme");
+    // console.log(`Tema recuperado desde localStorage: ${savedTheme}`); // Verificamos qué tema se recupera
+
+    if (savedTheme) {
+        changeTheme(savedTheme); // Aplicamos el tema guardado
+    } else {
+        changeTheme("default"); // Si no hay tema guardado, usamos el predeterminado
+    }
+});
 </script>
 
 <template>
@@ -30,8 +75,8 @@ const logout = () => {
 
         <Banner />
 
-        <div class="min-h-screen bg-gray-100">
-            <nav class="bg-white border-b border-gray-100">
+        <div class="">
+            <nav class="border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -61,6 +106,7 @@ const logout = () => {
 
                             <!-- Dropdown: Registro de Usuarios -->
                             <div
+                                v-if="isGerente || isEmpleado"
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <Dropdown align="right" width="48">
@@ -89,6 +135,7 @@ const logout = () => {
 
                                     <template #content>
                                         <DropdownLink
+                                            v-if="isGerente"
                                             :href="route('doctors.index')"
                                             :active="
                                                 route().current('doctors.index')
@@ -97,6 +144,7 @@ const logout = () => {
                                             Doctores
                                         </DropdownLink>
                                         <DropdownLink
+                                            v-if="isGerente"
                                             :href="route('employees.index')"
                                             :active="
                                                 route().current(
@@ -107,9 +155,11 @@ const logout = () => {
                                             Empleados
                                         </DropdownLink>
                                         <div
+                                            v-if="isGerente"
                                             class="border-t border-gray-200"
                                         ></div>
                                         <DropdownLink
+                                            v-if="isGerente || isEmpleado"
                                             :href="route('patients.index')"
                                             :active="
                                                 route().current(
@@ -120,6 +170,7 @@ const logout = () => {
                                             Pacientes
                                         </DropdownLink>
                                         <DropdownLink
+                                            v-if="isGerente || isEmpleado"
                                             :href="route('proxies.index')"
                                             :active="
                                                 route().current('proxies.index')
@@ -133,7 +184,8 @@ const logout = () => {
 
                             <!-- Dropdown: Recursos -->
                             <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-2 sm:flex"
+                                v-if="isGerente || isEmpleado"
+                                class="hidden space-x-8 sm:-my-px sm:ms-4 sm:flex"
                             >
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -161,14 +213,20 @@ const logout = () => {
 
                                     <template #content>
                                         <DropdownLink
+                                            v-if="isGerente"
                                             :href="route('rooms.index')"
-                                            :active="route().current('rooms.index')"
+                                            :active="
+                                                route().current('rooms.index')
+                                            "
                                         >
                                             Salas
                                         </DropdownLink>
                                         <DropdownLink
+                                            v-if="isGerente || isEmpleado"
                                             :href="route('meals.index')"
-                                            :active="route().current('meals.index')"
+                                            :active="
+                                                route().current('meals.index')
+                                            "
                                         >
                                             Productos
                                         </DropdownLink>
@@ -177,7 +235,8 @@ const logout = () => {
                             </div>
                             <!-- Dropdown: Servicios -->
                             <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-2 sm:flex"
+                                v-if="isEmpleado"
+                                class="hidden space-x-8 sm:-my-px sm:ms-4 sm:flex"
                             >
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -205,20 +264,35 @@ const logout = () => {
 
                                     <template #content>
                                         <DropdownLink
+                                            v-if="isEmpleado"
                                             :href="route('treatments.index')"
-                                            :active="route().current('treatments.index')"
+                                            :active="
+                                                route().current(
+                                                    'treatments.index'
+                                                )
+                                            "
                                         >
                                             Tratamientos
                                         </DropdownLink>
                                         <DropdownLink
+                                            v-if="isEmpleado"
                                             :href="route('consults.index')"
-                                            :active="route().current('consults.index')"
+                                            :active="
+                                                route().current(
+                                                    'consults.index'
+                                                )
+                                            "
                                         >
                                             Consultas
                                         </DropdownLink>
                                         <DropdownLink
+                                            v-if="isEmpleado"
                                             :href="route('vaccines.index')"
-                                            :active="route().current('vaccines.index')"
+                                            :active="
+                                                route().current(
+                                                    'vaccines.index'
+                                                )
+                                            "
                                         >
                                             Vacunas
                                         </DropdownLink>
@@ -227,7 +301,8 @@ const logout = () => {
                             </div>
                             <!-- Dropdown: Atencion -->
                             <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-2 sm:flex"
+                                v-if="isDoctor"
+                                class="hidden space-x-8 sm:-my-px sm:ms-4 sm:flex"
                             >
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -255,14 +330,24 @@ const logout = () => {
 
                                     <template #content>
                                         <DropdownLink
+                                            v-if="isDoctor"
                                             :href="route('caresheets.index')"
-                                            :active="route().current('caresheets.index')"
+                                            :active="
+                                                route().current(
+                                                    'caresheets.index'
+                                                )
+                                            "
                                         >
                                             Hojas de Atención
                                         </DropdownLink>
                                         <DropdownLink
+                                            v-if="isDoctor"
                                             :href="route('observations.index')"
-                                            :active="route().current('observations.index')"
+                                            :active="
+                                                route().current(
+                                                    'observations.index'
+                                                )
+                                            "
                                         >
                                             Seguimientos
                                         </DropdownLink>
@@ -271,7 +356,8 @@ const logout = () => {
                             </div>
                             <!-- Dropdown: Financiera -->
                             <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-2 sm:flex"
+                                v-if="isGerente || isEmpleado"
+                                class="hidden space-x-8 sm:-my-px sm:ms-4 sm:flex"
                             >
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -299,20 +385,33 @@ const logout = () => {
 
                                     <template #content>
                                         <DropdownLink
+                                            v-if="isGerente || isEmpleado"
                                             :href="route('payments.index')"
-                                            :active="route().current('payments.index')"
+                                            :active="
+                                                route().current(
+                                                    'payments.index'
+                                                )
+                                            "
                                         >
                                             Pagos
                                         </DropdownLink>
                                         <DropdownLink
+                                            v-if="isGerente || isEmpleado"
                                             :href="route('reports.index')"
-                                            :active="route().current('reports.index')"
+                                            :active="
+                                                route().current('reports.index')
+                                            "
                                         >
                                             Reportes
                                         </DropdownLink>
                                         <DropdownLink
+                                            v-if="isGerente || isEmpleado"
                                             :href="route('stadistics.index')"
-                                            :active="route().current('stadistics.index')"
+                                            :active="
+                                                route().current(
+                                                    'stadistics.index'
+                                                )
+                                            "
                                         >
                                             Estadísticas
                                         </DropdownLink>
@@ -320,7 +419,64 @@ const logout = () => {
                                 </Dropdown>
                             </div>
                         </div>
+                        <!-- Theme Switcher in Dropdown -->
+                        <div class="hidden sm:flex sm:items-center sm:ms-6">
+                            <div class="ms-3 relative">
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <button
+                                            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-500 bg-white border-2 border-transparent rounded-md hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150"
+                                        >
+                                            Cambiar Tema
+                                            <svg
+                                                class="ms-2 -me-0.5 size-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </template>
 
+                                    <template #content>
+                                        <!-- Theme Switcher Buttons inside Dropdown -->
+                                        <div>
+                                            <DropdownLink
+                                                href="#"
+                                                @click="changeTheme('default')"
+                                            >
+                                                Default
+                                            </DropdownLink>
+                                            <DropdownLink
+                                                href="#"
+                                                @click="changeTheme('children')"
+                                            >
+                                                Niños
+                                            </DropdownLink>
+                                            <DropdownLink
+                                                href="#"
+                                                @click="changeTheme('youth')"
+                                            >
+                                                Jóvenes
+                                            </DropdownLink>
+                                            <DropdownLink
+                                                href="#"
+                                                @click="changeTheme('adults')"
+                                            >
+                                                Adultos
+                                            </DropdownLink>
+                                        </div>
+                                    </template>
+                                </Dropdown>
+                            </div>
+                        </div>
                         <!-- Settings Dropdown -->
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
                             <div class="ms-3 relative">
@@ -410,7 +566,10 @@ const logout = () => {
                         <div class="-me-2 flex items-center sm:hidden">
                             <button
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                                @click="showingNavigationDropdown = !showingNavigationDropdown"
+                                @click="
+                                    showingNavigationDropdown =
+                                        !showingNavigationDropdown
+                                "
                             >
                                 <svg
                                     class="size-6"
@@ -464,10 +623,16 @@ const logout = () => {
                     </div>
 
                     <!-- Responsive Dropdown: Registro de Usuarios -->
-                    <div class="pt-2 pb-3 space-y-1">
+                    <div
+                        v-if="isGerente || isEmpleado"
+                        class="pt-2 pb-3 space-y-1"
+                    >
                         <button
                             class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
-                            @click="showingResponsiveDropdownUsuarios = !showingResponsiveDropdownUsuarios"
+                            @click="
+                                showingResponsiveDropdownUsuarios =
+                                    !showingResponsiveDropdownUsuarios
+                            "
                         >
                             Registro
                             <svg
@@ -491,12 +656,14 @@ const logout = () => {
                         >
                             <div class="py-1">
                                 <ResponsiveNavLink
+                                    v-if="isGerente"
                                     :href="route('doctors.index')"
                                     :active="route().current('doctors.index')"
                                 >
                                     Doctores
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
+                                    v-if="isGerente"
                                     :href="route('employees.index')"
                                     :active="route().current('employees.index')"
                                 >
@@ -504,12 +671,14 @@ const logout = () => {
                                 </ResponsiveNavLink>
                                 <div class="border-t border-gray-200"></div>
                                 <ResponsiveNavLink
+                                    v-if="isGerente || isEmpleado"
                                     :href="route('patients.index')"
                                     :active="route().current('patients.index')"
                                 >
                                     Pacientes
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
+                                    v-if="isGerente || isEmpleado"
                                     :href="route('proxies.index')"
                                     :active="route().current('proxies.index')"
                                 >
@@ -520,10 +689,16 @@ const logout = () => {
                     </div>
 
                     <!-- Responsive Dropdown: Recursos -->
-                    <div class="pt-2 pb-3 space-y-1">
+                    <div
+                        v-if="isGerente || isEmpleado"
+                        class="pt-2 pb-3 space-y-1"
+                    >
                         <button
                             class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
-                            @click="showingResponsiveDropdownRecursos = !showingResponsiveDropdownRecursos"
+                            @click="
+                                showingResponsiveDropdownRecursos =
+                                    !showingResponsiveDropdownRecursos
+                            "
                         >
                             Recursos
                             <svg
@@ -547,12 +722,14 @@ const logout = () => {
                         >
                             <div class="py-1">
                                 <ResponsiveNavLink
+                                    v-if="isGerente"
                                     :href="route('rooms.index')"
                                     :active="route().current('rooms.index')"
                                 >
                                     Salas
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
+                                    v-if="isGerente || isEmpleado"
                                     :href="route('meals.index')"
                                     :active="route().current('meals.index')"
                                 >
@@ -562,10 +739,13 @@ const logout = () => {
                         </div>
                     </div>
                     <!-- Responsive Dropdown: Servicios -->
-                    <div class="pt-2 pb-3 space-y-1">
+                    <div v-if="isEmpleado" class="pt-2 pb-3 space-y-1">
                         <button
                             class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
-                            @click="showingResponsiveDropdownServicios = !showingResponsiveDropdownServicios"
+                            @click="
+                                showingResponsiveDropdownServicios =
+                                    !showingResponsiveDropdownServicios
+                            "
                         >
                             Servicios
                             <svg
@@ -589,18 +769,23 @@ const logout = () => {
                         >
                             <div class="py-1">
                                 <ResponsiveNavLink
+                                    v-if="isEmpleado"
                                     :href="route('treatments.index')"
-                                    :active="route().current('treatments.index')"
+                                    :active="
+                                        route().current('treatments.index')
+                                    "
                                 >
                                     Tratamientos
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
+                                    v-if="isEmpleado"
                                     :href="route('consults.index')"
                                     :active="route().current('consults.index')"
                                 >
                                     Consultas
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
+                                    v-if="isEmpleado"
                                     :href="route('vaccines.index')"
                                     :active="route().current('vaccines.index')"
                                 >
@@ -610,10 +795,13 @@ const logout = () => {
                         </div>
                     </div>
                     <!-- Responsive Dropdown: Atencion -->
-                    <div class="pt-2 pb-3 space-y-1">
+                    <div v-if="isDoctor" class="pt-2 pb-3 space-y-1">
                         <button
                             class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
-                            @click="showingResponsiveDropdownAtencion = !showingResponsiveDropdownAtencion"
+                            @click="
+                                showingResponsiveDropdownAtencion =
+                                    !showingResponsiveDropdownAtencion
+                            "
                         >
                             Atención
                             <svg
@@ -637,14 +825,20 @@ const logout = () => {
                         >
                             <div class="py-1">
                                 <ResponsiveNavLink
+                                    v-if="isDoctor"
                                     :href="route('caresheets.index')"
-                                    :active="route().current('caresheets.index')"
+                                    :active="
+                                        route().current('caresheets.index')
+                                    "
                                 >
                                     Hojas de Atención
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
+                                    v-if="isDoctor"
                                     :href="route('observations.index')"
-                                    :active="route().current('observations.index')"
+                                    :active="
+                                        route().current('observations.index')
+                                    "
                                 >
                                     Seguimientos
                                 </ResponsiveNavLink>
@@ -652,10 +846,16 @@ const logout = () => {
                         </div>
                     </div>
                     <!-- Responsive Dropdown: Financiera -->
-                    <div class="pt-2 pb-3 space-y-1">
+                    <div
+                        v-if="isGerente || isEmpleado"
+                        class="pt-2 pb-3 space-y-1"
+                    >
                         <button
                             class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
-                            @click="showingResponsiveDropdownFinanciera = !showingResponsiveDropdownFinanciera"
+                            @click="
+                                showingResponsiveDropdownFinanciera =
+                                    !showingResponsiveDropdownFinanciera
+                            "
                         >
                             Adm. Financiera
                             <svg
@@ -679,12 +879,14 @@ const logout = () => {
                         >
                             <div class="py-1">
                                 <ResponsiveNavLink
+                                    v-if="isGerente || isEmpleado"
                                     :href="route('payments.index')"
                                     :active="route().current('payments.index')"
                                 >
                                     Pagos
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
+                                    v-if="isGerente || isEmpleado"
                                     :href="route('reports.index')"
                                     :active="route().current('reports.index')"
                                 >
@@ -692,9 +894,68 @@ const logout = () => {
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
                                     :href="route('stadistics.index')"
-                                    :active="route().current('stadistics.index')"
+                                    :active="
+                                        route().current('stadistics.index')
+                                    "
                                 >
                                     Estadísticas
+                                </ResponsiveNavLink>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Responsive Dropdown: Cambiar Tema -->
+                    <div class="pt-2 pb-3 space-y-1">
+                        <button
+                            class="w-full flex items-center justify-between px-4 py-2 text-left text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-600 transition duration-150 ease-in-out"
+                            @click="
+                                showingResponsiveDropdownFinanciera =
+                                    !showingResponsiveDropdownFinanciera
+                            "
+                        >
+                            Cambiar Tema
+                            <svg
+                                class="h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                />
+                            </svg>
+                        </button>
+                        <div
+                            v-if="showingResponsiveDropdownFinanciera"
+                            class="mt-2 bg-gray-50 border border-gray-200 rounded-md shadow-md"
+                        >
+                            <div class="py-1">
+                                <ResponsiveNavLink
+                                    href="#"
+                                    @click.prevent="changeTheme('default')"
+                                >
+                                    Default
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    href="#"
+                                    @click.prevent="changeTheme('children')"
+                                >
+                                    Niños
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    href="#"
+                                    @click.prevent="changeTheme('youth')"
+                                >
+                                    Jóvenes
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    href="#"
+                                    @click.prevent="changeTheme('adults')"
+                                >
+                                    Adultos
                                 </ResponsiveNavLink>
                             </div>
                         </div>

@@ -13,6 +13,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\VaccineController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,9 +23,16 @@ Route::get('/', function () {
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+        $role = Auth::user()->role->name;
 
+        return Inertia::render('Dashboard',[
+            'role' => $role,
+        ]);
+    })->name('dashboard');
+});
+
+// Rol: Gerente
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'role:Gerente'])->group(function () {
     // Doctors
     Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
     Route::get('/doctors/create', [DoctorController::class, 'create'])->name('doctors.create');
@@ -42,6 +50,18 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
     Route::get('/employees/{employee}/show', [EmployeeController::class, 'show'])->name('employees.show');
+
+    // Rooms
+    Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
+    Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
+    Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
+    Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
+    Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+});
+
+// Rol: Gerente y Empleado
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'role:Gerente,Empleado'])->group(function () {
 
     // Proxies
     Route::get('/proxies', [ProxyController::class, 'index'])->name('proxies.index');
@@ -67,13 +87,30 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::put('/meals/{meal}', [MealController::class, 'update'])->name('meals.update');
     Route::delete('/meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy');
 
-    // Rooms
-    Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
-    Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
-    Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
-    Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
-    Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
-    Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+    // Payments
+    Route::get('/payments/pay', [PaymentController::class, 'pay'])->name('payments.pay');
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+    Route::post('/payments/generate-qr', [PaymentController::class, 'generateQR'])->name('payments.generateQR');
+    Route::post('/payments/verify', [PaymentController::class, 'verifyPayment'])->name('payments.verify');
+    Route::post('/payments/callback', [PaymentController::class, 'callback'])->name('payments.callback');
+    Route::get('/payments/return', [PaymentController::class, 'return'])->name('payments.return');
+    Route::get('/test-token', [PaymentController::class, 'testToken']);
+
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/payments', [ReportController::class, 'payment'])->name('reports.payment');
+    Route::get('/reports/consults', [ReportController::class, 'consult'])->name('reports.consult');
+    Route::get('/reports/treatments', [ReportController::class, 'treatment'])->name('reports.treatment');
+
+
+    // Stadistics
+    Route::get('/stadistics', [ReportController::class, 'stadistics'])->name('stadistics.index');
+});
+
+// Rol: Empleado
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'role:Empleado'])->group(function () {
 
     // Treatments
     Route::get('/treatments', [TreatmentController::class, 'index'])->name('treatments.index');
@@ -98,6 +135,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/vaccines/{vaccine}/edit', [VaccineController::class, 'edit'])->name('vaccines.edit');
     Route::put('/vaccines/{vaccine}', [VaccineController::class, 'update'])->name('vaccines.update');
     Route::delete('/vaccines/{vaccine}', [VaccineController::class, 'destroy'])->name('vaccines.destroy');
+});
+
+// Rol: Doctor
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'role:Doctor'])->group(function () {
 
     // Caresheets
     Route::get('/caresheets', [CaresheetController::class, 'index'])->name('caresheets.index');
@@ -106,7 +147,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/caresheets/{caresheet}/edit', [CaresheetController::class, 'edit'])->name('caresheets.edit');
     Route::put('/caresheets/{caresheet}', [CaresheetController::class, 'update'])->name('caresheets.update');
     Route::delete('/caresheets/{caresheet}', [CaresheetController::class, 'destroy'])->name('caresheets.destroy');
-    Route::get('/caresheets/{caresheet}',[CaresheetController::class, 'show'])->name('caresheets.show');
+    Route::get('/caresheets/{caresheet}', [CaresheetController::class, 'show'])->name('caresheets.show');
 
     // Observations
     Route::get('/observations', [ObservationController::class, 'index'])->name('observations.index');
@@ -115,27 +156,5 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/observations/{observation}/edit', [ObservationController::class, 'edit'])->name('observations.edit');
     Route::put('/observations/{observation}', [ObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [ObservationController::class, 'destroy'])->name('observations.destroy');
-    Route::get('/observations/{treatment}',[ObservationController::class, 'show'])->name('observations.show');
-
-    // Payments
-    Route::get('/payments/pay', [PaymentController::class, 'pay'])->name('payments.pay');
-    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
-    Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
-    Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
-    Route::post('/payments/generate-qr', [PaymentController::class, 'generateQR'])->name('payments.generateQR');
-    Route::post('/payments/verify', [PaymentController::class, 'verifyPayment'])->name('payments.verify');
-    Route::post('/payments/callback', [PaymentController::class, 'callback'])->name('payments.callback');
-    Route::get('/payments/return', [PaymentController::class, 'return'])->name('payments.return');
-    Route::get('/test-token', [PaymentController::class, 'testToken']);
-
-    // Reports
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/payments', [ReportController::class, 'payment'])->name('reports.payment');
-    Route::get('/reports/consults', [ReportController::class, 'consult'])->name('reports.consult');
-    Route::get('/reports/treatments', [ReportController::class, 'treatment'])->name('reports.treatment');
-
-
-    // Stadistics
-    Route::get('/stadistics', [ReportController::class, 'stadistics'])->name('stadistics.index');
-
+    Route::get('/observations/{treatment}', [ObservationController::class, 'show'])->name('observations.show');
 });

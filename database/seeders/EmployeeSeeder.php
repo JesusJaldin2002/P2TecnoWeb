@@ -22,6 +22,7 @@ class EmployeeSeeder extends Seeder
             'phone_number' => 123456789,
             'address' => 'Avenida Secundaria, 456',
             'user_type' => 'E',
+            'role_id' => 2
         ]);
 
         Employee::create([
@@ -38,6 +39,7 @@ class EmployeeSeeder extends Seeder
             'phone_number' => 112233445,
             'address' => 'Calle Terciaria, 789',
             'user_type' => 'E', // 'E' para empleado
+            'role_id' => 2
         ]);
 
         Employee::create([
